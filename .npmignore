@@ -1,10 +1,9 @@
 # Folders
-_site/
-images/
 node_modules/
 src/
-ts-src/
 test/
+ts-src/
+_site/
 
 # files
 .gitignore
