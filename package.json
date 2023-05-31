@@ -1,0 +1,24 @@
+{
+  "name": "eleventy-generate-category-pages",
+  "version": "0.0.0",
+  "description": "",
+  "author": "John M. Wargo",
+  "license": "MIT",
+  "main": "eleventy-generate-category-pages.js",
+  "type": "module",
+  "scripts": {
+    "test": "tsc && echo \"Launching test\" && node ./test/test.js && echo \"Test complete\""
+  },
+  "keywords": [
+    "Eleventy"
+  ],
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^20.2.5"
+  },
+  "dependencies": {
+    "cli-logger": "^0.5.40",
+    "fs-extra": "^11.1.1",
+    "yaml": "^2.3.1"
+  }
+}

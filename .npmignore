@@ -1,0 +1,12 @@
+# Folders
+_site/
+images/
+node_modules/
+src/
+ts-src/
+test/
+
+# files
+.gitignore
+package-lock.json
+11ty-cat-page.liquid
