@@ -2,9 +2,9 @@ import fs from 'fs-extra';
 import path from 'path';
 import logger from 'cli-logger';
 import YAML from 'yaml';
-var log = logger();
 const UNCATEGORIZED_STRING = 'Uncategorized';
 const YAML_PATTERN = /---[\r\n].*?[\r\n]---/s;
+var log = logger();
 var fileList = [];
 var templateExtension;
 function compareFunction(a, b) {

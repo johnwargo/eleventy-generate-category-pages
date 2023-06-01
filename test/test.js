@@ -11,5 +11,5 @@ generateCatPages(
     templateFileName: '11ty-cat-page.liquid'
   },
   true,
-  true
+  false
 );
