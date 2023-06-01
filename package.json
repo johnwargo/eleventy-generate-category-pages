@@ -5,8 +5,7 @@
   "author": "John M. Wargo",
   "license": "MIT",
   "main": "eleventy-generate-category-pages.js",
-  "type": "module",
-  "scripts": {
+    "scripts": {
     "test": "tsc && echo \"Launching test\" && node ./test/test.js && echo \"Test complete\""
   },
   "keywords": [

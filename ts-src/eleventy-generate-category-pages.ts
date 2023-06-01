@@ -144,7 +144,7 @@ function directoryExists(filePath: string): boolean {
 * Start here!
 ***************************************/
 
-export function generateCatPages(options: any, quitOnError: boolean = true, debugMode: boolean = false) {
+export default function generateCategoryPages(options: any, quitOnError: boolean = true, debugMode: boolean = false) {
 
   const configDefaults: ConfigObject = {
     categoriesFolder: 'src/categories',

@@ -113,7 +113,7 @@ function directoryExists(filePath) {
     }
     return false;
 }
-export function generateCatPages(options, quitOnError = true, debugMode = false) {
+export default function generateCategoryPages(options, quitOnError = true, debugMode = false) {
     const configDefaults = {
         categoriesFolder: 'src/categories',
         dataFileName: 'category-meta.json',
