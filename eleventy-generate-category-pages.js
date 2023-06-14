@@ -1,10 +1,16 @@
-import fs from 'fs-extra';
-import path from 'path';
-import logger from 'cli-logger';
-import YAML from 'yaml';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateCategoryPages = void 0;
+const fs_extra_1 = __importDefault(require("fs-extra"));
+const path_1 = __importDefault(require("path"));
+const cli_logger_1 = __importDefault(require("cli-logger"));
+const yaml_1 = __importDefault(require("yaml"));
 const UNCATEGORIZED_STRING = 'Uncategorized';
 const YAML_PATTERN = /---[\r\n].*?[\r\n]---/s;
-var log = logger();
+var log = (0, cli_logger_1.default)();
 var fileList = [];
 var templateExtension;
 function compareFunction(a, b) {
@@ -30,7 +36,7 @@ async function validateConfig(validations) {
             }
         }
         else {
-            if (!fs.existsSync(validation.filePath)) {
+            if (!fs_extra_1.default.existsSync(validation.filePath)) {
                 processResult.result = false;
                 processResult.message += `\nThe '${validation.filePath}' file is required, but does not exist.`;
             }
@@ -39,14 +45,14 @@ async function validateConfig(validations) {
     return processResult;
 }
 function getAllFiles(dirPath, arrayOfFiles) {
-    var files = fs.readdirSync(dirPath);
+    var files = fs_extra_1.default.readdirSync(dirPath);
     arrayOfFiles = arrayOfFiles || [];
     files.forEach(function (file) {
-        if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+        if (fs_extra_1.default.statSync(dirPath + "/" + file).isDirectory()) {
             arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles);
         }
         else {
-            arrayOfFiles.push(path.join(process.cwd(), dirPath, file));
+            arrayOfFiles.push(path_1.default.join(process.cwd(), dirPath, file));
         }
     });
     return arrayOfFiles;
@@ -65,9 +71,9 @@ function buildCategoryList(categories, fileList, debugMode) {
     log.info('Building category list...');
     for (var fileName of fileList) {
         log.debug(`Parsing ${fileName}`);
-        if (path.extname(fileName.toString().toLocaleLowerCase()) !== '.json') {
-            var postFile = fs.readFileSync(fileName.toString(), 'utf8');
-            var YAMLDoc = YAML.parseAllDocuments(postFile, { logLevel: 'silent' });
+        if (path_1.default.extname(fileName.toString().toLocaleLowerCase()) !== '.json') {
+            var postFile = fs_extra_1.default.readFileSync(fileName.toString(), 'utf8');
+            var YAMLDoc = yaml_1.default.parseAllDocuments(postFile, { logLevel: 'silent' });
             var content = YAMLDoc[0].toJSON();
             if (debugMode)
                 console.dir(content);
@@ -102,9 +108,9 @@ function buildCategoryList(categories, fileList, debugMode) {
     return categories;
 }
 function directoryExists(filePath) {
-    if (fs.existsSync(filePath)) {
+    if (fs_extra_1.default.existsSync(filePath)) {
         try {
-            return fs.lstatSync(filePath).isDirectory();
+            return fs_extra_1.default.lstatSync(filePath).isDirectory();
         }
         catch (err) {
             log.error(`checkDirectory error: ${err}`);
@@ -113,7 +119,7 @@ function directoryExists(filePath) {
     }
     return false;
 }
-export default function generateCategoryPages(options, quitOnError = true, debugMode = false) {
+function generateCategoryPages(options, quitOnError = true, debugMode = false) {
     const configDefaults = {
         categoriesFolder: 'src/categories',
         dataFileName: 'category-meta.json',
@@ -136,8 +142,8 @@ export default function generateCategoryPages(options, quitOnError = true, debug
         .then((res) => {
         if (res.result) {
             log.info(`Reading template file ${config.templateFileName}`);
-            let templateFile = fs.readFileSync(config.templateFileName, 'utf8');
-            let templateDoc = YAML.parseAllDocuments(templateFile, { logLevel: 'silent' });
+            let templateFile = fs_extra_1.default.readFileSync(config.templateFileName, 'utf8');
+            let templateDoc = yaml_1.default.parseAllDocuments(templateFile, { logLevel: 'silent' });
             let frontmatter = JSON.parse(JSON.stringify(templateDoc))[0];
             if (debugMode)
                 console.dir(frontmatter);
@@ -146,12 +152,12 @@ export default function generateCategoryPages(options, quitOnError = true, debug
                 if (quitOnError)
                     process.exit(1);
             }
-            templateExtension = path.extname(config.templateFileName);
+            templateExtension = path_1.default.extname(config.templateFileName);
             let categories = [];
-            let categoriesFile = path.join(process.cwd(), config.dataFolder, config.dataFileName);
-            if (fs.existsSync(categoriesFile)) {
+            let categoriesFile = path_1.default.join(process.cwd(), config.dataFolder, config.dataFileName);
+            if (fs_extra_1.default.existsSync(categoriesFile)) {
                 log.info(`Reading existing categories file ${categoriesFile}`);
-                let categoryData = fs.readFileSync(categoriesFile, 'utf8');
+                let categoryData = fs_extra_1.default.readFileSync(categoriesFile, 'utf8');
                 categories = JSON.parse(categoryData);
                 if (categories.length > 0)
                     categories.forEach((item) => item.count = 0);
@@ -180,7 +186,7 @@ export default function generateCategoryPages(options, quitOnError = true, debug
                 console.table(categories);
             log.info(`Writing categories list to ${categoriesFile}`);
             try {
-                fs.writeFileSync(categoriesFile, JSON.stringify(categories, null, 2), 'utf8');
+                fs_extra_1.default.writeFileSync(categoriesFile, JSON.stringify(categories, null, 2), 'utf8');
             }
             catch (err) {
                 console.log('Error writing file');
@@ -188,9 +194,9 @@ export default function generateCategoryPages(options, quitOnError = true, debug
                 if (quitOnError)
                     process.exit(1);
             }
-            const categoriesFolder = path.join(process.cwd(), config.categoriesFolder);
+            const categoriesFolder = path_1.default.join(process.cwd(), config.categoriesFolder);
             log.debug(`Emptying categories folder: ${categoriesFolder}`);
-            fs.emptyDirSync(categoriesFolder);
+            fs_extra_1.default.emptyDirSync(categoriesFolder);
             categories.forEach(function (item) {
                 if (item.category === "")
                     return;
@@ -210,9 +216,9 @@ export default function generateCategoryPages(options, quitOnError = true, debug
                     tmpFrontmatter = tmpFrontmatter.replace(`"${frontmatter.pagination.before}"`, frontmatter.pagination.before);
                     tmpFrontmatter = `---js\n${tmpFrontmatter}\n---`;
                     let newFrontmatter = templateFile.replace(YAML_PATTERN, tmpFrontmatter);
-                    let outputFileName = path.join(categoriesFolder, item.category.toLowerCase().replaceAll(' ', '-') + templateExtension);
+                    let outputFileName = path_1.default.join(categoriesFolder, item.category.replace(/\s+/g, '-').toLowerCase() + templateExtension);
                     log.info(`Writing category page: ${outputFileName}`);
-                    fs.writeFileSync(outputFileName, newFrontmatter);
+                    fs_extra_1.default.writeFileSync(outputFileName, newFrontmatter);
                 }
                 else {
                     log.error('Unable to match frontmatter in template file');
@@ -233,3 +239,5 @@ export default function generateCategoryPages(options, quitOnError = true, debug
             process.exit(1);
     });
 }
+exports.generateCategoryPages = generateCategoryPages;
+exports.default = generateCategoryPages;

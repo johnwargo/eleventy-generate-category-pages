@@ -144,7 +144,7 @@ function directoryExists(filePath: string): boolean {
 * Start here!
 ***************************************/
 
-export default function generateCategoryPages(options: any, quitOnError: boolean = true, debugMode: boolean = false) {
+function generateCategoryPages(options: any, quitOnError: boolean = true, debugMode: boolean = false) {
 
   const configDefaults: ConfigObject = {
     categoriesFolder: 'src/categories',
@@ -175,7 +175,6 @@ export default function generateCategoryPages(options: any, quitOnError: boolean
   validateConfig(validations)
     .then((res: ProcessResult) => {
       if (res.result) {
-
         // read the template file
         log.info(`Reading template file ${config.templateFileName}`);
         let templateFile = fs.readFileSync(config.templateFileName, 'utf8');
@@ -276,9 +275,15 @@ export default function generateCategoryPages(options: any, quitOnError: boolean
             // replace the content in the file 
             let newFrontmatter = templateFile.replace(YAML_PATTERN, tmpFrontmatter);
             // build the output file name
+            // https://stackoverflow.com/questions/1983648/replace-spaces-with-dashes-and-make-all-letters-lower-case
+            // str = str.replace(/\s+/g, '-').toLowerCase();
+            // let outputFileName: string = path.join(
+            //   categoriesFolder,
+            //   item.category.toLowerCase().replaceAll(' ', '-') + templateExtension
+            // );
             let outputFileName: string = path.join(
               categoriesFolder,
-              item.category.toLowerCase().replaceAll(' ', '-') + templateExtension
+              item.category.replace(/\s+/g, '-').toLowerCase() + templateExtension
             );
             log.info(`Writing category page: ${outputFileName}`);
             fs.writeFileSync(outputFileName, newFrontmatter);
@@ -297,3 +302,6 @@ export default function generateCategoryPages(options: any, quitOnError: boolean
       if (quitOnError) process.exit(1);
     });
 }
+
+export default generateCategoryPages;
+export { generateCategoryPages as generateCategoryPages };
