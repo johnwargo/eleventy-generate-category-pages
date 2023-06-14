@@ -6,7 +6,8 @@
   "license": "MIT",
   "main": "eleventy-generate-category-pages.js",
     "scripts": {
-    "test": "tsc && echo \"Launching test\" && node ./test/test.js && echo \"Test complete\""
+    "test": "tsc && echo \"Launching test\" && node ./test/test.js && echo \"Test complete\"",
+    "build": "tsc"
   },
   "keywords": [
     "Eleventy"
