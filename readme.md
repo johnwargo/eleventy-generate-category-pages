@@ -49,8 +49,7 @@ eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
 });
 ```
 
-
-The options for this configuration file are described below:
+The supported configuration options are described below:
 
 | Property           | Description                                   |
 | ------------------ | --------------------------------------------- |
@@ -71,6 +70,11 @@ const configDefaults: ConfigObject = {
   templateFileName: '11ty-cat-pages.liquid'
 };
 ```
+
+The final parameters to the call to `generateCategoryPages` are, in order:
+
+* Quit on Error: When `true`, the build process quits when the module encounters an error (although I haven't tested this in a while).
+* Debug Mode: When `true`, the module generates additional output to the console when it runs.
 
 ### Create the Template File
 
