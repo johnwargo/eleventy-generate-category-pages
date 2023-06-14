@@ -2,7 +2,4 @@
 
 await $`npm version patch`;
 await $`git push`;
-// await $`git commit -m "Incrementing package version"`;
-// await $`git push`;
 await $`npm publish`;
-// await $`git push`;
