@@ -4,5 +4,4 @@ src/
 _site/
 
 # files
-package-lock.json
 11ty-cat-page.liquid
