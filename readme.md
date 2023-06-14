@@ -35,7 +35,15 @@ npm install eleventy-generate-category-pages
 
 ## Usage
 
-To use this module, you must configure the project with the template file it needs to operate; once that's in place, you simply execute the module in the Eleventy build process like so: 
+Create a `before` event handler in your project's `eleventy.config.js` file using the defaults:
+
+```js
+eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
+  generateCategoryPages({}, true, false);
+});
+```
+
+or, specifying specific settings for your project:
 
 ```js
 eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
@@ -45,7 +53,7 @@ eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
   outputFolder: 'src/categories',
   postsFolder: 'src/posts',
   templateFileName: '11ty-cat-page.liquid'
-  }, true, true);
+  }, true, false);
 });
 ```
 
@@ -58,18 +66,6 @@ The supported configuration options are described below:
 | `outputFolder`   | The project source folder where the module places the individual category pages. For navigation simplicity, the module defaults to `categories`. |
 | `postsFolder`      | The project source folder for post files. Defaults to `src/posts`. Update this value if you use a different structure for your Eleventy projects. |
 | `templateFileName` | The file name of the category template file used to generate category pages. |
-
-The module assumes some default file/folder locations, so you can skip them if you want in the call to the module's `generateCategoryPages` function.
-
-```js
-const configDefaults: ConfigObject = {
-  categoriesFolder: 'src/categories',
-  dataFileName: 'category-meta.json',
-  dataFolder: 'src/_data',
-  postsFolder: 'src/posts',
-  templateFileName: '11ty-cat-pages.liquid'
-};
-```
 
 The final parameters to the call to `generateCategoryPages` are, in order:
 
