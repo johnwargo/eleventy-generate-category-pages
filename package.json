@@ -1,7 +1,7 @@
 {
   "name": "eleventy-generate-category-pages",
   "version": "0.0.1",
-  "description": "",
+  "description": "Generates paginated category pages as part of an eleventy site build.",
   "author": "John M. Wargo",
   "license": "MIT",
   "main": "eleventy-generate-category-pages.js",
