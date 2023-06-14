@@ -305,3 +305,19 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
 
 export default generateCategoryPages;
 export { generateCategoryPages as generateCategoryPages };
+
+// https://www.npmjs.com/package/outdent?activeTab=code
+// In CommonJS environments, enable `var outdent = require('outdent');` by
+// replacing the exports object.
+// Make sure that our replacement includes the named exports from above.
+declare var module: any;
+if (typeof module !== "undefined") {
+  // In webpack harmony-modules environments, module.exports is read-only,
+  // so we fail gracefully.
+  try {
+    module.exports = generateCategoryPages;
+    Object.defineProperty(generateCategoryPages, "__esModule", { value: true });
+    (generateCategoryPages as any).default = generateCategoryPages;
+    (generateCategoryPages as any).generateCategoryPages = generateCategoryPages;
+  } catch (e) {}
+}

@@ -241,3 +241,12 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
 }
 exports.generateCategoryPages = generateCategoryPages;
 exports.default = generateCategoryPages;
+if (typeof module !== "undefined") {
+    try {
+        module.exports = generateCategoryPages;
+        Object.defineProperty(generateCategoryPages, "__esModule", { value: true });
+        generateCategoryPages.default = generateCategoryPages;
+        generateCategoryPages.generateCategoryPages = generateCategoryPages;
+    }
+    catch (e) { }
+}

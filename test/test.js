@@ -1,8 +1,8 @@
-import { generateCatPages } from "../eleventy-generate-category-pages.js";
+const generateCategoryPages = require('../eleventy-generate-category-pages.js');
 
 console.log('Starting test...');
 
-generateCatPages(
+generateCategoryPages(
   {
     dataFileName: 'categories.json',
     // dataFolder: 'src/_data',
