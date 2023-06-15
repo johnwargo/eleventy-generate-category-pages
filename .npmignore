@@ -9,3 +9,5 @@ _site/
 .gitignore
 package-lock.json
 11ty-cat-page.liquid
+pub.mjs
+tsconfig.json
