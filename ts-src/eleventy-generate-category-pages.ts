@@ -10,7 +10,13 @@ import { CategoryRecord, ConfigObject, ConfigValidation, ProcessResult } from '.
 const UNCATEGORIZED_STRING = 'Uncategorized';
 const YAML_PATTERN = /---[\r\n].*?[\r\n]---/s
 
-var log = logger();
+
+var conf: any = {console: true, level: logger.INFO};
+conf.prefix = function(record: any) {
+  return '[Eleventy-Generate-Category-Pages]'
+}
+var log = logger(conf);
+
 var fileList: String[] = [];
 var templateExtension: string;
 

@@ -10,7 +10,11 @@ const cli_logger_1 = __importDefault(require("cli-logger"));
 const yaml_1 = __importDefault(require("yaml"));
 const UNCATEGORIZED_STRING = 'Uncategorized';
 const YAML_PATTERN = /---[\r\n].*?[\r\n]---/s;
-var log = (0, cli_logger_1.default)();
+var conf = { console: true, level: cli_logger_1.default.INFO };
+conf.prefix = function (record) {
+    return '[Eleventy-Generate-Category-Pages]';
+};
+var log = (0, cli_logger_1.default)(conf);
 var fileList = [];
 var templateExtension;
 function compareFunction(a, b) {
