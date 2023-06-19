@@ -92,9 +92,6 @@ function buildCategoryList(
   log.info('Building category list...');
   for (var fileName of fileList) {
     log.debug(`Parsing ${fileName}`);
-
-    // if (postExtensions.indexOf( fileExt)  < -1) {
-    // if ( path.extname(fileName.toString().toLocaleLowerCase()) !== '.json') {
     let fileExt = path.extname(fileName.toString()).toLocaleLowerCase();
     if (postExtensions.includes(fileExt)) {      
       // Read the post file
