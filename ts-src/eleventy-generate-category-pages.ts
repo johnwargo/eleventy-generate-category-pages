@@ -93,7 +93,7 @@ function buildCategoryList(
   for (var fileName of fileList) {
     log.debug(`Parsing ${fileName}`);
     let fileExt = path.extname(fileName.toString()).toLocaleLowerCase();
-    if (postExtensions.includes(fileExt)) {      
+    if (postExtensions.includes(fileExt)) {
       // Read the post file
       var postFile = fs.readFileSync(fileName.toString(), 'utf8');
       // Get the first YAML block from the file
@@ -304,7 +304,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
         log.error(res.message);
         if (quitOnError) process.exit(1);
       }
-          log.info('Finished writing category documents');
+      log.info('Finished writing category documents');
     })
     .catch((err) => {
       log.error(err);
