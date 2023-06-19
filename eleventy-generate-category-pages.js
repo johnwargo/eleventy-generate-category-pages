@@ -68,14 +68,15 @@ function getFileList(filePath, debugMode) {
     log.debug(`filePath: ${filePath}`);
     return getAllFiles(filePath, []);
 }
-function buildCategoryList(categories, fileList, debugMode) {
+function buildCategoryList(categories, fileList, postExtensions, debugMode) {
     var categoriesString;
     if (debugMode)
         console.log();
     log.info('Building category list...');
     for (var fileName of fileList) {
         log.debug(`Parsing ${fileName}`);
-        if (path_1.default.extname(fileName.toString().toLocaleLowerCase()) !== '.json') {
+        let fileExt = path_1.default.extname(fileName.toString()).toLocaleLowerCase();
+        if (postExtensions.includes(fileExt)) {
             var postFile = fs_extra_1.default.readFileSync(fileName.toString(), 'utf8');
             var YAMLDoc = yaml_1.default.parseAllDocuments(postFile, { logLevel: 'silent' });
             var content = YAMLDoc[0].toJSON();
@@ -128,6 +129,7 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
         categoriesFolder: 'src/categories',
         dataFileName: 'category-meta.json',
         dataFolder: 'src/_data',
+        postExtensions: ['.md'],
         postsFolder: 'src/posts',
         templateFileName: '11ty-cat-pages.liquid'
     };
@@ -179,7 +181,7 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
             log.info(`Located ${fileList.length} files`);
             if (debugMode)
                 console.dir(fileList);
-            categories = buildCategoryList(categories, fileList, debugMode);
+            categories = buildCategoryList(categories, fileList, config.postExtensions, debugMode);
             if (categories.length > 0) {
                 log.info('Deleting unused categories (from previous runs)');
                 categories = categories.filter((item) => item.count > 0);

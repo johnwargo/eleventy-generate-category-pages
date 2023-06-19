@@ -11,8 +11,8 @@ const UNCATEGORIZED_STRING = 'Uncategorized';
 const YAML_PATTERN = /---[\r\n].*?[\r\n]---/s
 
 
-var conf: any = {console: true, level: logger.INFO};
-conf.prefix = function(record: any) {
+var conf: any = { console: true, level: logger.INFO };
+conf.prefix = function (record: any) {
   return '[Eleventy-Generate-Category-Pages]'
 }
 var log = logger(conf);
@@ -82,6 +82,7 @@ function getFileList(filePath: string, debugMode: boolean): String[] {
 function buildCategoryList(
   categories: CategoryRecord[],
   fileList: String[],
+  postExtensions: String[],
   debugMode: boolean
 ): CategoryRecord[] {
 
@@ -92,7 +93,10 @@ function buildCategoryList(
   for (var fileName of fileList) {
     log.debug(`Parsing ${fileName}`);
 
-    if (path.extname(fileName.toString().toLocaleLowerCase()) !== '.json') {
+    // if (postExtensions.indexOf( fileExt)  < -1) {
+    // if ( path.extname(fileName.toString().toLocaleLowerCase()) !== '.json') {
+    let fileExt = path.extname(fileName.toString()).toLocaleLowerCase();
+    if (postExtensions.includes(fileExt)) {      
       // Read the post file
       var postFile = fs.readFileSync(fileName.toString(), 'utf8');
       // Get the first YAML block from the file
@@ -156,6 +160,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
     categoriesFolder: 'src/categories',
     dataFileName: 'category-meta.json',
     dataFolder: 'src/_data',
+    postExtensions: ['.md'],
     postsFolder: 'src/posts',
     templateFileName: '11ty-cat-pages.liquid'
   };
@@ -222,7 +227,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
         if (debugMode) console.dir(fileList);
 
         // build the categories list
-        categories = buildCategoryList(categories, fileList, debugMode);
+        categories = buildCategoryList(categories, fileList, config.postExtensions, debugMode);
         // do we have any categories?
         if (categories.length > 0) {
           // Delete any with a count of 0
@@ -325,5 +330,5 @@ if (typeof module !== "undefined") {
     Object.defineProperty(generateCategoryPages, "__esModule", { value: true });
     (generateCategoryPages as any).default = generateCategoryPages;
     (generateCategoryPages as any).generateCategoryPages = generateCategoryPages;
-  } catch (e) {}
+  } catch (e) { }
 }

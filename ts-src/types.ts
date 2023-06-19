@@ -2,6 +2,7 @@ export type ConfigObject = {
   categoriesFolder: string;
   dataFileName: string;
   dataFolder: string;
+  postExtensions: string[];
   postsFolder: string;  
   templateFileName: string;
 }
