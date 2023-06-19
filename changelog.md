@@ -1,5 +1,20 @@
 # Changelog
 
+## 20230619
+
+The module needs to know what files in the folder are post files (mostly because some sites sore image files in the same folder as posts), so I added a configuration option called `postExtensions` that allows the site to specify the file extensions for post files:
+
+```js
+  const configDefaults: ConfigObject = {
+    categoriesFolder: 'src/categories',
+    dataFileName: 'category-meta.json',
+    dataFolder: 'src/_data',
+    postExtensions: ['.md', '.njk'],
+    postsFolder: 'src/posts',
+    templateFileName: '11ty-cat-pages.liquid'
+  };
+```
+
 ## 20230615
 
 Added the module name to all console output:

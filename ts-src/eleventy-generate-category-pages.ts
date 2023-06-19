@@ -157,7 +157,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
     categoriesFolder: 'src/categories',
     dataFileName: 'category-meta.json',
     dataFolder: 'src/_data',
-    postExtensions: ['.md'],
+    postExtensions: ['.md', '.njk'],
     postsFolder: 'src/posts',
     templateFileName: '11ty-cat-pages.liquid'
   };
