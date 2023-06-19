@@ -129,7 +129,7 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
         categoriesFolder: 'src/categories',
         dataFileName: 'category-meta.json',
         dataFolder: 'src/_data',
-        postExtensions: ['.md'],
+        postExtensions: ['.md', '.njk'],
         postsFolder: 'src/posts',
         templateFileName: '11ty-cat-pages.liquid'
     };
@@ -238,6 +238,7 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
             if (quitOnError)
                 process.exit(1);
         }
+        log.info('Finished writing category documents');
     })
         .catch((err) => {
         log.error(err);

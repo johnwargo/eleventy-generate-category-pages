@@ -304,6 +304,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
         log.error(res.message);
         if (quitOnError) process.exit(1);
       }
+          log.info('Finished writing category documents');
     })
     .catch((err) => {
       log.error(err);
