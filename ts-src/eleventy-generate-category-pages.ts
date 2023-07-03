@@ -170,7 +170,6 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
   log.debug('Debug mode enabled\n');
   if (debugMode) console.dir(config);
 
-
   // we'll create this file when we write it
   // { filePath: configObject.dataFileName, isFolder: false },
   const validations: ConfigValidation[] = [
