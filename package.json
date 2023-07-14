@@ -5,6 +5,10 @@
   "author": "John M. Wargo",
   "license": "MIT",
   "main": "eleventy-generate-category-pages.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnwargo/eleventy-generate-category-pages"
+  },
   "scripts": {
     "test": "tsc && echo \"Launching test\" && node ./test/test.js && echo \"Test complete\"",
     "build": "tsc"
