@@ -42,12 +42,33 @@ var firstRun = true;
 eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
   if (firstRun) {
     firstRun = false;
-    generateCategoryPages({}, true, false);
+    generateCategoryPages({});
   }
 });
 ```
 
-or, specifying specific settings for your project:
+More accurately, use the properties from the `dir` object passed to the event:
+
+```js
+var firstRun = true;
+eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
+  if (firstRun) {
+    firstRun = false;
+    generateCategoryPages({
+      dataFileName: 'categories.json',
+      dataFolder: dir.data,
+      outputFolder: dir.output,
+      postExtensions: ['.md'],
+      postsFolder: 'src/posts',
+      templateFileName: '11ty-cat-page.liquid',
+      debugMode: false,
+      quitOnError: false
+    }, true, false);
+  }
+});
+```
+
+or specify the specific settings for your project:
 
 ```js
 var firstRun = true;
@@ -60,8 +81,10 @@ eleventyConfig.on('eleventy.before', async ({ dir, runMode, outputMode }) => {
       outputFolder: 'src/categories',
       postExtensions: ['.md'],
       postsFolder: 'src/posts',
-      templateFileName: '11ty-cat-page.liquid'
-      }, true, false);
+      templateFileName: '11ty-cat-page.liquid',
+      debugMode: false,
+      quitOnError: false
+      });
   }
 });
 ```
@@ -76,11 +99,8 @@ The supported configuration options are described below:
 | `postExtensions`   | Array specifying the file extensions used for site posts. Defaults to `['.md', '.njk']` |
 | `postsFolder`      | The project source folder for post files. Defaults to `src/posts`. Update this value if you use a different structure for your Eleventy projects. |
 | `templateFileName` | The file name of the category template file used to generate category pages. |
-
-The final parameters to the call to `generateCategoryPages` are, in order:
-
-* Quit on Error: When `true`, the build process quits when the module encounters an error (although I haven't tested this in a while).
-* Debug Mode: When `true`, the module generates additional output to the console when it runs.
+| `debugMode` | When `true`, the module generates additional output to the console when it runs. |
+| `quitOnError` | When `true``, the build process quits when the module encounters an error. |
 
 The `firstRun` check exists because of an infinite loop situation created when executing `eleventy` with the `--watch` or `--serve` flags. Generating category pages in these situations causes the category pages to generate with every change in the site and the generation process causes another rebuild - hence infinite loop.
 

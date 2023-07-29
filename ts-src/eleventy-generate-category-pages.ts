@@ -151,7 +151,7 @@ function directoryExists(filePath: string): boolean {
 * Start here!
 ***************************************/
 
-function generateCategoryPages(options: any, quitOnError: boolean = true, debugMode: boolean = false) {
+function generateCategoryPages(options: ConfigObject = {}) {
 
   const configDefaults: ConfigObject = {
     categoriesFolder: 'src/categories',
@@ -159,13 +159,17 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
     dataFolder: 'src/_data',
     postExtensions: ['.md', '.njk'],
     postsFolder: 'src/posts',
-    templateFileName: '11ty-cat-pages.liquid'
+    templateFileName: '11ty-cat-pages.liquid',
+    quitOnError: false,
+    debugMode: false,
+    imageProperties: false
   };
 
   // merge the defaults (first) with the provided options (second)
   const config: ConfigObject = Object.assign({}, configDefaults, options);
 
   // set the logger log level
+  const debugMode = options.debugMode || false;
   log.level(debugMode ? log.DEBUG : log.INFO);
   log.debug('Debug mode enabled\n');
   if (debugMode) console.dir(config);
@@ -173,18 +177,18 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
   // we'll create this file when we write it
   // { filePath: configObject.dataFileName, isFolder: false },
   const validations: ConfigValidation[] = [
-    { filePath: config.categoriesFolder, isFolder: true },
-    { filePath: config.dataFolder, isFolder: true },
-    { filePath: config.postsFolder, isFolder: true },
-    { filePath: config.templateFileName, isFolder: false }
+    { filePath: config.categoriesFolder!, isFolder: true },
+    { filePath: config.dataFolder!, isFolder: true },
+    { filePath: config.postsFolder!, isFolder: true },
+    { filePath: config.templateFileName!, isFolder: false }
   ];
 
   validateConfig(validations)
     .then((res: ProcessResult) => {
       if (res.result) {
         // read the template file
-        log.info(`Reading template file ${config.templateFileName}`);
-        let templateFile = fs.readFileSync(config.templateFileName, 'utf8');
+        log.info(`Reading template file ${config.templateFileName!}`);
+        let templateFile = fs.readFileSync(config.templateFileName!, 'utf8');
         // get the YAML frontmatter
         let templateDoc = YAML.parseAllDocuments(templateFile, { logLevel: 'silent' });
         // convert the YAML frontmatter to a JSON object
@@ -193,15 +197,15 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
         if (debugMode) console.dir(frontmatter);
         if (!frontmatter.pagination) {
           log.error('The template file does not contain the pagination frontmatter');
-          if (quitOnError) process.exit(1);
+          if (options.quitOnError) process.exit(1);
         }
 
         // get the file extension for the template file, we'll use it later
-        templateExtension = path.extname(config.templateFileName);
+        templateExtension = path.extname(config.templateFileName!);
 
         let categories: CategoryRecord[] = [];
         // Read the existing categories file
-        let categoriesFile = path.join(process.cwd(), config.dataFolder, config.dataFileName);
+        let categoriesFile = path.join(process.cwd(), config.dataFolder!, config.dataFileName!);
         if (fs.existsSync(categoriesFile)) {
           log.info(`Reading existing categories file ${categoriesFile}`);
           let categoryData = fs.readFileSync(categoriesFile, 'utf8');
@@ -213,7 +217,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
           log.info('Category data file not found, will create a new one');
         }
 
-        fileList = getFileList(config.postsFolder, debugMode);
+        fileList = getFileList(config.postsFolder!, debugMode);
         if (fileList.length < 1) {
           log.error('\nNo Post files found in the project, exiting');
           process.exit(0);
@@ -223,7 +227,7 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
         if (debugMode) console.dir(fileList);
 
         // build the categories list
-        categories = buildCategoryList(categories, fileList, config.postExtensions, debugMode);
+        categories = buildCategoryList(categories, fileList, config.postExtensions!, debugMode);
         // do we have any categories?
         if (categories.length > 0) {
           // Delete any with a count of 0
@@ -240,11 +244,11 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
         } catch (err) {
           console.log('Error writing file');
           console.error(err)
-          if (quitOnError) process.exit(1);
+          if (options.quitOnError) process.exit(1);
         }
 
         // empty the categories folder, just in case there are old categories there
-        const categoriesFolder = path.join(process.cwd(), config.categoriesFolder);
+        const categoriesFolder = path.join(process.cwd(), config.categoriesFolder!);
         log.debug(`Emptying categories folder: ${categoriesFolder}`);
         fs.emptyDirSync(categoriesFolder);
 
@@ -296,18 +300,18 @@ function generateCategoryPages(options: any, quitOnError: boolean = true, debugM
             fs.writeFileSync(outputFileName, newFrontmatter);
           } else {
             log.error('Unable to match frontmatter in template file');
-            if (quitOnError) process.exit(1);
+            if (options.quitOnError) process.exit(1);
           }
         });
       } else {
         log.error(res.message);
-        if (quitOnError) process.exit(1);
+        if (options.quitOnError) process.exit(1);
       }
       log.info('Finished writing category documents');
     })
     .catch((err) => {
       log.error(err);
-      if (quitOnError) process.exit(1);
+      if (options.quitOnError) process.exit(1);
     });
 }
 

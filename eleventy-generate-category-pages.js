@@ -124,16 +124,20 @@ function directoryExists(filePath) {
     }
     return false;
 }
-function generateCategoryPages(options, quitOnError = true, debugMode = false) {
+function generateCategoryPages(options = {}) {
     const configDefaults = {
         categoriesFolder: 'src/categories',
         dataFileName: 'category-meta.json',
         dataFolder: 'src/_data',
         postExtensions: ['.md', '.njk'],
         postsFolder: 'src/posts',
-        templateFileName: '11ty-cat-pages.liquid'
+        templateFileName: '11ty-cat-pages.liquid',
+        quitOnError: false,
+        debugMode: false,
+        imageProperties: false
     };
     const config = Object.assign({}, configDefaults, options);
+    const debugMode = options.debugMode || false;
     log.level(debugMode ? log.DEBUG : log.INFO);
     log.debug('Debug mode enabled\n');
     if (debugMode)
@@ -155,7 +159,7 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
                 console.dir(frontmatter);
             if (!frontmatter.pagination) {
                 log.error('The template file does not contain the pagination frontmatter');
-                if (quitOnError)
+                if (options.quitOnError)
                     process.exit(1);
             }
             templateExtension = path_1.default.extname(config.templateFileName);
@@ -197,7 +201,7 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
             catch (err) {
                 console.log('Error writing file');
                 console.error(err);
-                if (quitOnError)
+                if (options.quitOnError)
                     process.exit(1);
             }
             const categoriesFolder = path_1.default.join(process.cwd(), config.categoriesFolder);
@@ -228,21 +232,21 @@ function generateCategoryPages(options, quitOnError = true, debugMode = false) {
                 }
                 else {
                     log.error('Unable to match frontmatter in template file');
-                    if (quitOnError)
+                    if (options.quitOnError)
                         process.exit(1);
                 }
             });
         }
         else {
             log.error(res.message);
-            if (quitOnError)
+            if (options.quitOnError)
                 process.exit(1);
         }
         log.info('Finished writing category documents');
     })
         .catch((err) => {
         log.error(err);
-        if (quitOnError)
+        if (options.quitOnError)
             process.exit(1);
     });
 }
