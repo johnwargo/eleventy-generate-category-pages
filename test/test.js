@@ -8,8 +8,9 @@ generateCategoryPages(
     // dataFolder: 'src/_data',
     // outputFolder: 'src/categories',
     postsFolder: 'src/posts',
-    templateFileName: '11ty-cat-page.liquid'
-  },
-  true,
-  false
+    templateFileName: '11ty-cat-page.liquid',
+    quitOnError: true,
+    debugMode: false,
+    imageProperties: true
+  },  
 );

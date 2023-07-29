@@ -68,7 +68,7 @@ function getFileList(filePath, debugMode) {
     log.debug(`filePath: ${filePath}`);
     return getAllFiles(filePath, []);
 }
-function buildCategoryList(categories, fileList, postExtensions, debugMode) {
+function buildCategoryList(categories, fileList, postExtensions, debugMode, imageProperties = false) {
     var categoriesString;
     if (debugMode)
         console.log();
@@ -99,7 +99,12 @@ function buildCategoryList(categories, fileList, postExtensions, debugMode) {
                 var index = categories.findIndex((item) => item.category === category);
                 if (index < 0) {
                     log.info(`Found category: ${category}`);
-                    categories.push({ category: category, count: 1, description: '' });
+                    if (imageProperties) {
+                        categories.push({ category: category, count: 1, description: '', imageFilePath: '', imageAltText: '', imageAttribution: '' });
+                    }
+                    else {
+                        categories.push({ category: category, count: 1, description: '' });
+                    }
                 }
                 else {
                     categories[index].count++;
@@ -185,7 +190,7 @@ function generateCategoryPages(options = {}) {
             log.info(`Located ${fileList.length} files`);
             if (debugMode)
                 console.dir(fileList);
-            categories = buildCategoryList(categories, fileList, config.postExtensions, debugMode);
+            categories = buildCategoryList(categories, fileList, config.postExtensions, debugMode, config.imageProperties);
             if (categories.length > 0) {
                 log.info('Deleting unused categories (from previous runs)');
                 categories = categories.filter((item) => item.count > 0);

@@ -83,7 +83,8 @@ function buildCategoryList(
   categories: CategoryRecord[],
   fileList: String[],
   postExtensions: String[],
-  debugMode: boolean
+  debugMode: boolean,
+  imageProperties: boolean = false
 ): CategoryRecord[] {
 
   var categoriesString: string;
@@ -122,7 +123,11 @@ function buildCategoryList(
         if (index < 0) {
           log.info(`Found category: ${category}`);
           // add the category to the list
-          categories.push({ category: category, count: 1, description: '' });
+          if (imageProperties) {
+            categories.push({ category: category, count: 1, description: '', imageFilePath: '', imageAltText: '', imageAttribution: '' });
+          } else {
+            categories.push({ category: category, count: 1, description: '' });
+          }
         } else {
           // increment the count for the category
           categories[index].count++;
@@ -227,7 +232,7 @@ function generateCategoryPages(options: ConfigObject = {}) {
         if (debugMode) console.dir(fileList);
 
         // build the categories list
-        categories = buildCategoryList(categories, fileList, config.postExtensions!, debugMode);
+        categories = buildCategoryList(categories, fileList, config.postExtensions!, debugMode, config.imageProperties!);
         // do we have any categories?
         if (categories.length > 0) {
           // Delete any with a count of 0
