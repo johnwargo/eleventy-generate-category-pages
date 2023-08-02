@@ -1,9 +1,5 @@
 # Changelog
 
-## 20230802 0.1.1
-
-Om the generated Category page, changed the front matter `category` property to `categories` to better align with how normal front matter looks.
-
 ## 20230730 0.1.0
 
 **Breaking Change** 

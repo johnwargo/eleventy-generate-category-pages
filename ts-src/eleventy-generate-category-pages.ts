@@ -267,8 +267,8 @@ function generateCategoryPages(options: ConfigObject = {}) {
           let pos1 = templateFile.search(YAML_PATTERN);
           if (pos1 > -1) {
             // We have a match for the YAML frontmatter (which makes sense)
-            // replace the categories field in the frontmatter
-            frontmatter.categories = item.category;
+            // replace the category field in the frontmatter
+            frontmatter.category = item.category;
             if (item.description) frontmatter.description = item.description;
             if (item.category == UNCATEGORIZED_STRING) {
               // deal with uncategorized posts differently, categories field is blank
