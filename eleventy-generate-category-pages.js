@@ -218,7 +218,7 @@ function generateCategoryPages(options = {}) {
                 log.debug(`\nProcessing category: ${item.category}`);
                 let pos1 = templateFile.search(YAML_PATTERN);
                 if (pos1 > -1) {
-                    frontmatter.category = item.category;
+                    frontmatter.categories = item.category;
                     if (item.description)
                         frontmatter.description = item.description;
                     if (item.category == UNCATEGORIZED_STRING) {
