@@ -1,5 +1,9 @@
 # Changelog
 
+## 20230802 0.1.1
+
+Reduced the amount of output written to the console; enable `debug` mode to send more content to the console during processing.
+
 ## 20230730 0.1.0
 
 **Breaking Change** 

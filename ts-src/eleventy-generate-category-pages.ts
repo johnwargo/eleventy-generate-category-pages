@@ -10,7 +10,6 @@ import { CategoryRecord, ConfigObject, ConfigValidation, ProcessResult } from '.
 const UNCATEGORIZED_STRING = 'Uncategorized';
 const YAML_PATTERN = /---[\r\n].*?[\r\n]---/s
 
-
 var conf: any = { console: true, level: logger.INFO };
 conf.prefix = function (record: any) {
   return '[Eleventy-Generate-Category-Pages]'
@@ -24,7 +23,7 @@ var templateExtension: string;
  * Support Functions
  **************************************/
 
-function compareFunction(a: any, b: any) {
+function _compareFunction(a: any, b: any) {
   if (a.category < b.category) {
     return -1;
   }
@@ -34,7 +33,7 @@ function compareFunction(a: any, b: any) {
   return 0;
 }
 
-async function validateConfig(validations: ConfigValidation[]): Promise<ProcessResult> {
+async function _validateConfig(validations: ConfigValidation[]): Promise<ProcessResult> {
 
   var processResult: ProcessResult;
 
@@ -45,7 +44,7 @@ async function validateConfig(validations: ConfigValidation[]): Promise<ProcessR
   for (var validation of validations) {
     log.debug(`Validating '${validation.filePath}'`);
     if (validation.isFolder) {
-      if (!directoryExists(validation.filePath)) {
+      if (!_directoryExists(validation.filePath)) {
         processResult.result = false;
         processResult.message += `\nThe '${validation.filePath}' folder is required, but does not exist.`;
       }
@@ -59,12 +58,12 @@ async function validateConfig(validations: ConfigValidation[]): Promise<ProcessR
   return processResult;
 }
 
-function getAllFiles(dirPath: string, arrayOfFiles: string[]) {
+function _getAllFiles(dirPath: string, arrayOfFiles: string[]) {
   var files = fs.readdirSync(dirPath)
   arrayOfFiles = arrayOfFiles || []
   files.forEach(function (file: string) {
     if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllFiles(dirPath + "/" + file, arrayOfFiles)
+      arrayOfFiles = _getAllFiles(dirPath + "/" + file, arrayOfFiles)
     } else {
       arrayOfFiles.push(path.join(process.cwd(), dirPath, file));
     }
@@ -72,14 +71,14 @@ function getAllFiles(dirPath: string, arrayOfFiles: string[]) {
   return arrayOfFiles
 }
 
-function getFileList(filePath: string, debugMode: boolean): String[] {
+function _getFileList(filePath: string, debugMode: boolean): String[] {
   if (debugMode) console.log();
   log.info('Building file list...');
   log.debug(`filePath: ${filePath}`);
-  return getAllFiles(filePath, []);
+  return _getAllFiles(filePath, []);
 }
 
-function buildCategoryList(
+function _buildCategoryList(
   categories: CategoryRecord[],
   fileList: String[],
   postExtensions: String[],
@@ -134,13 +133,13 @@ function buildCategoryList(
         }
       }
     } else {
-      log.info(`Skipping ${fileName}`);
+      log.debug(`Skipping ${fileName}`);
     }
   }
   return categories;
 }
 
-function directoryExists(filePath: string): boolean {
+function _directoryExists(filePath: string): boolean {
   if (fs.existsSync(filePath)) {
     try {
       return fs.lstatSync(filePath).isDirectory();
@@ -188,11 +187,11 @@ function generateCategoryPages(options: ConfigObject = {}) {
     { filePath: config.templateFileName!, isFolder: false }
   ];
 
-  validateConfig(validations)
+  _validateConfig(validations)
     .then((res: ProcessResult) => {
       if (res.result) {
         // read the template file
-        log.info(`Reading template file ${config.templateFileName!}`);
+        log.debug(`Reading template file ${config.templateFileName!}`);
         let templateFile = fs.readFileSync(config.templateFileName!, 'utf8');
         // get the YAML frontmatter
         let templateDoc = YAML.parseAllDocuments(templateFile, { logLevel: 'silent' });
@@ -212,38 +211,38 @@ function generateCategoryPages(options: ConfigObject = {}) {
         // Read the existing categories file
         let categoriesFile = path.join(process.cwd(), config.dataFolder!, config.dataFileName!);
         if (fs.existsSync(categoriesFile)) {
-          log.info(`Reading existing categories file ${categoriesFile}`);
+          log.debug(`Reading existing categories file ${categoriesFile}`);
           let categoryData = fs.readFileSync(categoriesFile, 'utf8');
           categories = JSON.parse(categoryData);
           // zero out all of the categories
           if (categories.length > 0) categories.forEach((item) => item.count = 0);
           if (debugMode) console.table(categories);
         } else {
-          log.info('Category data file not found, will create a new one');
+          log.info('Category data file not found, creating file');
         }
 
-        fileList = getFileList(config.postsFolder!, debugMode);
+        fileList = _getFileList(config.postsFolder!, debugMode);
         if (fileList.length < 1) {
           log.error('\nNo Post files found in the project, exiting');
           process.exit(0);
         }
 
-        log.info(`Located ${fileList.length} files`);
+        log.info(`Processing ${fileList.length} files`);
         if (debugMode) console.dir(fileList);
 
         // build the categories list
-        categories = buildCategoryList(categories, fileList, config.postExtensions!, debugMode, config.imageProperties!);
+        categories = _buildCategoryList(categories, fileList, config.postExtensions!, debugMode, config.imageProperties!);
         // do we have any categories?
         if (categories.length > 0) {
           // Delete any with a count of 0
-          log.info('Deleting unused categories (from previous runs)');
+          log.debug('Deleting unused categories (from previous runs)');
           categories = categories.filter((item) => item.count > 0);
         }
         log.info(`Identified ${categories.length} categories`);
-        categories = categories.sort(compareFunction);
+        categories = categories.sort(_compareFunction);
         if (debugMode) console.table(categories);
 
-        log.info(`Writing categories list to ${categoriesFile}`);
+        log.info(`Writing categories to ${categoriesFile}`);
         try {
           fs.writeFileSync(categoriesFile, JSON.stringify(categories, null, 2), 'utf8');
         } catch (err) {
@@ -301,7 +300,7 @@ function generateCategoryPages(options: ConfigObject = {}) {
               categoriesFolder,
               item.category.replace(/\s+/g, '-').toLowerCase() + templateExtension
             );
-            log.info(`Writing category page: ${outputFileName}`);
+            log.debug(`Writing category page: ${outputFileName}`);
             fs.writeFileSync(outputFileName, newFrontmatter);
           } else {
             log.error('Unable to match frontmatter in template file');
