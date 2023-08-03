@@ -72,7 +72,6 @@ function _getAllFiles(dirPath: string, arrayOfFiles: string[]) {
 }
 
 function _getFileList(filePath: string, debugMode: boolean): String[] {
-  if (debugMode) console.log();
   log.info('Building file list...');
   log.debug(`filePath: ${filePath}`);
   return _getAllFiles(filePath, []);
@@ -85,10 +84,8 @@ function _buildCategoryList(
   debugMode: boolean,
   imageProperties: boolean = false
 ): CategoryRecord[] {
-
   var categoriesString: string;
 
-  if (debugMode) console.log();
   log.info('Building category list...');
   for (var fileName of fileList) {
     log.debug(`Parsing ${fileName}`);
@@ -262,7 +259,7 @@ function generateCategoryPages(options: ConfigObject = {}) {
           if (item.category === "")
             return;
 
-          log.debug(`\nProcessing category: ${item.category}`);
+          log.debug(`Processing category: ${item.category}`);
           let pos1 = templateFile.search(YAML_PATTERN);
           if (pos1 > -1) {
             // We have a match for the YAML frontmatter (which makes sense)
@@ -271,9 +268,7 @@ function generateCategoryPages(options: ConfigObject = {}) {
             if (item.description) frontmatter.description = item.description;
             if (item.category == UNCATEGORIZED_STRING) {
               // deal with uncategorized posts differently, categories field is blank
-              frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
-              //  frontmatter.pagination.before = `function(paginationData, fullData){ return paginationData.filter((item) => item.data.categories.length == 0);
-              // }`
+              frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`              
             } else {
               frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.includes('${item.category}')); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
             }
