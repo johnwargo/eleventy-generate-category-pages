@@ -1,8 +1,12 @@
 # Changelog
 
+## 20240420 (v0.1.4)
+
+Fixed logic error dealing with uncategorized items (and category property not being there or empty).
+
 ## 20240420 (v0.1.3)
 
-Fixed an error where a category without a description was assigned the description from another catrgory.
+Fixed an error where a category without a description was assigned the description from another category.
 
 ## 20230802 (v0.1.1)
 
