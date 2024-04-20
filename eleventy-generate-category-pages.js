@@ -62,16 +62,12 @@ function _getAllFiles(dirPath, arrayOfFiles) {
     return arrayOfFiles;
 }
 function _getFileList(filePath, debugMode) {
-    if (debugMode)
-        console.log();
     log.info('Building file list...');
     log.debug(`filePath: ${filePath}`);
     return _getAllFiles(filePath, []);
 }
 function _buildCategoryList(categories, fileList, postExtensions, debugMode, imageProperties = false) {
     var categoriesString;
-    if (debugMode)
-        console.log();
     log.info('Building category list...');
     for (var fileName of fileList) {
         log.debug(`Parsing ${fileName}`);
@@ -180,7 +176,7 @@ function generateCategoryPages(options = {}) {
                     console.table(categories);
             }
             else {
-                log.info('Category data file not found, creating file');
+                log.info('Category data file not found, creating...');
             }
             fileList = _getFileList(config.postsFolder, debugMode);
             if (fileList.length < 1) {
@@ -215,12 +211,11 @@ function generateCategoryPages(options = {}) {
             categories.forEach(function (item) {
                 if (item.category === "")
                     return;
-                log.debug(`\nProcessing category: ${item.category}`);
+                log.debug(`Processing category: ${item.category}`);
                 let pos1 = templateFile.search(YAML_PATTERN);
                 if (pos1 > -1) {
                     frontmatter.category = item.category;
-                    if (item.description)
-                        frontmatter.description = item.description;
+                    frontmatter.description = item.description ? item.description : '';
                     if (item.category == UNCATEGORIZED_STRING) {
                         frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`;
                     }

@@ -215,7 +215,7 @@ function generateCategoryPages(options: ConfigObject = {}) {
           if (categories.length > 0) categories.forEach((item) => item.count = 0);
           if (debugMode) console.table(categories);
         } else {
-          log.info('Category data file not found, creating file');
+          log.info('Category data file not found, creating...');
         }
 
         fileList = _getFileList(config.postsFolder!, debugMode);
@@ -265,10 +265,11 @@ function generateCategoryPages(options: ConfigObject = {}) {
             // We have a match for the YAML frontmatter (which makes sense)
             // replace the category field in the frontmatter
             frontmatter.category = item.category;
-            if (item.description) frontmatter.description = item.description;
+            // if (item.description) frontmatter.description = item.description;
+            frontmatter.description = item.description ? item.description : '';
             if (item.category == UNCATEGORIZED_STRING) {
               // deal with uncategorized posts differently, categories field is blank
-              frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`              
+              frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
             } else {
               frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories.includes('${item.category}')); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
             }
