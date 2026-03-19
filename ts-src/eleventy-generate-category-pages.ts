@@ -271,7 +271,8 @@ function generateCategoryPages(options: ConfigObject = {}) {
               // deal with uncategorized posts differently, categories field is blank
               frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => !item.data.categories || item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
             } else {
-              frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories && item.data.categories.includes('${item.category}')); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
+              // frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories && item.data.categories.includes('${item.category}')); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`
+              frontmatter.pagination.before = `function test(paginationData, fullData) {let data = paginationData.filter((item) => {if (item.data.categories) { const searchWords = item.category.toLowerCase().trim().split(/\s+/); const lowerCaseItem = item.data.categories.toLowerCase(); return searchWords.every(word => { return lowerCaseItem.includes(word);}return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });} else {return [];};});};`
             }
 
             // convert the frontmatter to JSON format
