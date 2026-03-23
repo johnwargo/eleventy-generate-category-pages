@@ -5,3 +5,5 @@ _site/
 
 # files
 11ty-cat-pages.liquid
+*.cmd
+.eleventy.js

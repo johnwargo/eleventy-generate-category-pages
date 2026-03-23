@@ -8,7 +8,7 @@ generateCategoryPages(
     // dataFolder: 'src/_data',
     // outputFolder: 'src/categories',
     postsFolder: 'src/posts',
-    templateFileName: '11ty-cat-page.liquid',
+    templateFileName: '11ty-cat-pages.liquid',
     quitOnError: true,
     debugMode: false,
     imageProperties: true
