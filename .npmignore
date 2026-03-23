@@ -12,3 +12,4 @@ package-lock.json
 tsconfig.json
 *.cmd
 .eleventy.js
+.DS_Store

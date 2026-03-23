@@ -7,3 +7,4 @@ _site/
 11ty-cat-pages.liquid
 *.cmd
 .eleventy.js
+.DS_Store
