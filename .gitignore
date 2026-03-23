@@ -4,4 +4,7 @@ src/
 _site/
 
 # files
-11ty-cat-page.liquid
+11ty-cat-pages.liquid
+*.cmd
+.eleventy.js
+.DS_Store

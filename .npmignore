@@ -8,7 +8,8 @@ _site/
 # files
 .gitignore
 package-lock.json
-11ty-cat-page.liquid
-pub.mjs
+11ty-cat-pages.liquid
 tsconfig.json
-.eleventyignore
+*.cmd
+.eleventy.js
+.DS_Store
