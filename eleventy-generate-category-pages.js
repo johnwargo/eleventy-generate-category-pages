@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateCategoryPages = generateCategoryPages;
+exports.generateCategoryPages = void 0;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const cli_logger_1 = __importDefault(require("cli-logger"));
@@ -220,7 +220,7 @@ function generateCategoryPages(options = {}) {
                         frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => !item.data.categories || item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`;
                     }
                     else {
-                        frontmatter.pagination.before = `function test(paginationData, fullData) { let data = paginationData.filter((item) => { if (item.data.categories) { const searchWords = item.category.toLowerCase().trim().split(/\s+/); const lowerCaseItem = item.data.categories.toLowerCase(); return searchWords.every((word) => { return lowerCaseItem.includes(word); }); } else { return false; } }); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; }); }`;
+                        frontmatter.pagination.before = `function(paginationData, fullData) { let data = paginationData.filter((item) => item.data.categories && item.data.categories.indexOf('${item.category}')> -1); console.log(\`category: ${item.category}\`); console.dir(data);return data.sort((a, b) => new Date(b.date) - new Date(a.date));}`;
                     }
                     let tmpFrontmatter = JSON.stringify(frontmatter, null, 2);
                     tmpFrontmatter = tmpFrontmatter.replace(`"${frontmatter.pagination.before}"`, frontmatter.pagination.before);
@@ -250,6 +250,7 @@ function generateCategoryPages(options = {}) {
             process.exit(1);
     });
 }
+exports.generateCategoryPages = generateCategoryPages;
 exports.default = generateCategoryPages;
 if (typeof module !== "undefined") {
     try {
