@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateCategoryPages = void 0;
+exports.generateCategoryPages = generateCategoryPages;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const path_1 = __importDefault(require("path"));
 const cli_logger_1 = __importDefault(require("cli-logger"));
@@ -217,7 +217,7 @@ function generateCategoryPages(options = {}) {
                     frontmatter.category = item.category;
                     frontmatter.description = item.description ? item.description : '';
                     if (item.category == UNCATEGORIZED_STRING) {
-                        frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => !item.data.categories || item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`;
+                        frontmatter.pagination.before = `function test(paginationData, fullData) { let data = paginationData.filter((item) => { if (item.data.categories && item.category) { let catArray = [...item.data.categories]; console.dir(catArray); return (catArray.indexOf(item.category) > -1); } else { return false; }}); console.dir(data); return data.sort((a, b) => new Date(b.date) - new Date(a.date));}`;
                     }
                     else {
                         frontmatter.pagination.before = `function(paginationData, fullData) { let data = paginationData.filter((item) => item.data.categories && item.data.categories.indexOf('${item.category}')> -1); console.log(\`category: ${item.category}\`); console.dir(data);return data.sort((a, b) => new Date(b.date) - new Date(a.date));}`;
@@ -250,7 +250,6 @@ function generateCategoryPages(options = {}) {
             process.exit(1);
     });
 }
-exports.generateCategoryPages = generateCategoryPages;
 exports.default = generateCategoryPages;
 if (typeof module !== "undefined") {
     try {
