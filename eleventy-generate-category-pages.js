@@ -217,10 +217,10 @@ function generateCategoryPages(options = {}) {
                     frontmatter.category = item.category;
                     frontmatter.description = item.description ? item.description : '';
                     if (item.category == UNCATEGORIZED_STRING) {
-                        frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => !item.data.categories || item.data.categories.length == 0); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`;
+                        frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => !item.data.categories || item.data.categories.length == 0); return data.sort((a, b) => new Date(b.date) - new Date(a.date));}`;
                     }
                     else {
-                        frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => item.data.categories && item.data.categories.includes('${item.category}')); return Array.from(data).sort((a, b) => { return a.date < b.date ? 1 : -1; });}`;
+                        frontmatter.pagination.before = `function(paginationData, fullData){ let data = paginationData.filter((item) => { if (!item.data.categories) return false; let cats = [...item.data.categories]; return cats.includes(\`${item.category}\`);}); return data.sort((a, b) => new Date(b.date) - new Date(a.date));}`;
                     }
                     let tmpFrontmatter = JSON.stringify(frontmatter, null, 2);
                     tmpFrontmatter = tmpFrontmatter.replace(`"${frontmatter.pagination.before}"`, frontmatter.pagination.before);

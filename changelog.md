@@ -1,5 +1,9 @@
 # Changelog
 
+## 20260404 (v0.1.5)
+
+Fixed a logic error where the utility didn't properly process category front matter that wasn't an array. 
+
 ## 20240420 (v0.1.4)
 
 Fixed logic error dealing with uncategorized items (and category property not being there or empty).
